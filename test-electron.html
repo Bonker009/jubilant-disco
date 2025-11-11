@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page</title>
+</head>
+<body>
+    <h1>If you see this, the server is working!</h1>
+    <p>Testing React app loading...</p>
+    <div id="root">Loading...</div>
+    <script>
+        console.log('Test page loaded');
+        // Try to load the React app
+        const script = document.createElement('script');
+        script.src = '/static/js/main.4e8e240e.js';
+        script.onerror = () => {
+            document.getElementById('root').innerHTML = 'ERROR: Could not load React app JavaScript file';
+            console.error('Failed to load React app');
+        };
+        script.onload = () => {
+            console.log('React app script loaded');
+        };
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>
+

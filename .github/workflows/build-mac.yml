@@ -1,0 +1,54 @@
+name: Build macOS
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install root dependencies
+        run: npm install
+      
+      - name: Install client dependencies
+        run: |
+          cd client
+          npm install
+          cd ..
+      
+      - name: Build React app
+        run: npm run build
+      
+      - name: Build macOS DMG
+        run: npm run build && electron-builder --mac
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false  # Set to true if you have code signing
+      
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-dmg
+          path: dist/*.dmg
+          retention-days: 30
+      
+      - name: Upload App bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-app
+          path: dist/mac/*.app
+          retention-days: 30
+          if-no-files-found: ignore
+

@@ -486,6 +486,52 @@ h1 {
   flex: 1;
 }
 
+.test-value-dropdown {
+  flex: 1;
+  cursor: pointer;
+}
+
+.test-value-summary {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85em;
+  color: #000000;
+  word-break: break-all;
+  list-style: none;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.test-value-summary::-webkit-details-marker {
+  display: none;
+}
+
+.test-value-summary::before {
+  content: '▶ ';
+  display: inline-block;
+  margin-right: 4px;
+  transition: transform 0.2s;
+  font-size: 0.7em;
+}
+
+.test-value-dropdown[open] .test-value-summary::before {
+  transform: rotate(90deg);
+}
+
+.test-value-full {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85em;
+  color: #000000;
+  word-break: break-all;
+  padding: 8px;
+  margin-top: 4px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
 .test-status-code {
   font-family: 'Courier New', monospace;
   font-size: 0.9em;

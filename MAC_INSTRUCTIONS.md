@@ -6,9 +6,9 @@
    - Download from [nodejs.org](https://nodejs.org/)
    - Or install via Homebrew: `brew install node`
 
-2. **curl** (pre-installed on macOS)
-   - Verify it's available: `curl --version`
-   - If not found, install via Homebrew: `brew install curl`
+2. **No additional tools required!**
+   - The app uses Node.js built-in HTTP client (no curl needed)
+   - Works out of the box on macOS
 
 ## Installation Steps
 

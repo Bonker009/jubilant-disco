@@ -338,6 +338,39 @@ function App() {
     return String(value);
   };
 
+  const isLongValue = (value) => {
+    if (value === null || value === undefined) return false;
+    if (typeof value === 'string') return value.length > 50;
+    if (typeof value === 'object') {
+      const str = JSON.stringify(value);
+      return str.length > 50;
+    }
+    return String(value).length > 50;
+  };
+
+  const formatValueShort = (value) => {
+    if (value === null) return 'null';
+    if (value === undefined) return 'undefined';
+    if (typeof value === 'string') {
+      if (value.length > 50) {
+        return `"${value.substring(0, 47)}..." (${value.length} chars)`;
+      }
+      return `"${value}"`;
+    }
+    if (typeof value === 'object') {
+      const str = JSON.stringify(value);
+      if (str.length > 50) {
+        return `${str.substring(0, 47)}... (${str.length} chars)`;
+      }
+      return str;
+    }
+    const str = String(value);
+    if (str.length > 50) {
+      return `${str.substring(0, 47)}... (${str.length} chars)`;
+    }
+    return str;
+  };
+
   return (
     <div className="App">
       <div className="container">
@@ -603,7 +636,18 @@ function App() {
                               <div className="test-details">
                                 <div className="test-value-row">
                                   <span className="test-label">Value:</span>
-                                  <span className="test-value-text">{formatValue(test.value)}</span>
+                                  {isLongValue(test.value) ? (
+                                    <details className="test-value-dropdown">
+                                      <summary className="test-value-summary">
+                                        {formatValueShort(test.value)}
+                                      </summary>
+                                      <div className="test-value-full">
+                                        {formatValue(test.value)}
+                                      </div>
+                                    </details>
+                                  ) : (
+                                    <span className="test-value-text">{formatValue(test.value)}</span>
+                                  )}
                                 </div>
                                 <div className="test-status-row">
                                   <span className="test-label">Status:</span>

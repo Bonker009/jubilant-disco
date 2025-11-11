@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Test endpoint with streaming support
 app.post('/api/test-validation', async (req, res) => {
   try {
-    const { endpoint, requestBody, authToken, stream } = req.body;
+    const { endpoint, requestBody, authToken, method = 'POST', stream } = req.body;
 
     if (!endpoint || !requestBody) {
       return res.status(400).json({ 
@@ -37,7 +37,7 @@ app.post('/api/test-validation', async (req, res) => {
       const startTime = Date.now();
       
       try {
-        const finalResults = await testEndpointValidation(endpoint, requestBody, authToken, sendProgress);
+        const finalResults = await testEndpointValidation(endpoint, requestBody, authToken, method, sendProgress);
         
         const duration = ((Date.now() - startTime) / 1000).toFixed(2);
         console.log(`Validation test completed in ${duration} seconds`);
@@ -64,7 +64,7 @@ app.post('/api/test-validation', async (req, res) => {
       console.log('Starting validation test for endpoint:', endpoint);
       const startTime = Date.now();
       
-      const results = await testEndpointValidation(endpoint, requestBody, authToken);
+      const results = await testEndpointValidation(endpoint, requestBody, authToken, method);
       
       const duration = ((Date.now() - startTime) / 1000).toFixed(2);
       console.log(`Validation test completed in ${duration} seconds`);

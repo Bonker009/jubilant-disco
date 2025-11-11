@@ -5,6 +5,7 @@ function App() {
   const [endpoint, setEndpoint] = useState('');
   const [requestBody, setRequestBody] = useState('');
   const [authToken, setAuthToken] = useState('');
+  const [httpMethod, setHttpMethod] = useState('POST');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
@@ -43,6 +44,7 @@ function App() {
           endpoint,
           requestBody,
           authToken: authToken || undefined,
+          method: httpMethod,
           stream: true
         })
       }).catch(fetchError => {
@@ -381,7 +383,19 @@ function App() {
         {activeTab === 'input' && (
           <div className="input-section">
             <div className="input-group">
-              <label htmlFor="endpoint">POST Endpoint URL</label>
+              <label htmlFor="method">HTTP Method</label>
+              <select
+                id="method"
+                value={httpMethod}
+                onChange={(e) => setHttpMethod(e.target.value)}
+                className="method-select"
+              >
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+              </select>
+            </div>
+            <div className="input-group">
+              <label htmlFor="endpoint">{httpMethod} Endpoint URL</label>
               <input
                 id="endpoint"
                 type="text"

@@ -5,7 +5,7 @@ const { URL } = require('url');
 /**
  * Test validation for a single field by sending different value types
  */
-async function testFieldValidation(endpoint, baseBody, fieldName, originalValue, authToken, progressCallback = null) {
+async function testFieldValidation(endpoint, baseBody, fieldName, originalValue, authToken, method = 'POST', progressCallback = null) {
   const testCases = [
     { name: 'null', value: null },
     { name: 'undefined', value: undefined },
@@ -62,10 +62,10 @@ async function testFieldValidation(endpoint, baseBody, fieldName, originalValue,
     try {
       // Log the test to terminal
       console.log(`\n[TEST] Field: ${fieldName}, Test: ${testCase.name}`);
-      console.log(`[REQUEST] POST ${endpoint}`);
+      console.log(`[REQUEST] ${method} ${endpoint}`);
       
       // Make HTTP request using Node.js built-in modules
-      const result = await makeHttpRequest(endpoint, testBody, authToken);
+      const result = await makeHttpRequest(endpoint, testBody, authToken, method);
       const statusCode = result.statusCode;
       const responseBody = result.response;
       
@@ -142,7 +142,7 @@ async function testFieldValidation(endpoint, baseBody, fieldName, originalValue,
  * Make HTTP request using Node.js built-in http/https modules
  * This is more reliable than curl and works consistently across all platforms
  */
-function makeHttpRequest(endpoint, body, authToken) {
+function makeHttpRequest(endpoint, body, authToken, method = 'POST') {
   return new Promise((resolve, reject) => {
     try {
       const url = new URL(endpoint);
@@ -155,7 +155,7 @@ function makeHttpRequest(endpoint, body, authToken) {
         hostname: url.hostname,
         port: url.port || (isHttps ? 443 : 80),
         path: url.pathname + url.search,
-        method: 'POST',
+        method: method.toUpperCase(), // Support POST, PUT, etc.
         headers: {
           'Content-Type': 'application/json',
           'Content-Length': Buffer.byteLength(jsonBody)
@@ -267,7 +267,7 @@ function isValidationError(response) {
  * Main function to test endpoint validation
  * @param {Function} progressCallback - Optional callback to send progress updates
  */
-async function testEndpointValidation(endpoint, requestBody, authToken, progressCallback = null) {
+async function testEndpointValidation(endpoint, requestBody, authToken, method = 'POST', progressCallback = null) {
   // Parse the request body (handle both string and object)
   const body = typeof requestBody === 'string' ? JSON.parse(requestBody) : requestBody;
   const fields = Object.keys(body);
@@ -296,10 +296,10 @@ async function testEndpointValidation(endpoint, requestBody, authToken, progress
   try {
     // Log baseline request to terminal
     console.log('\n[BASELINE] Testing original request body');
-    console.log(`[REQUEST] POST ${endpoint}`);
+    console.log(`[REQUEST] ${method} ${endpoint}`);
     
     // Make HTTP request using Node.js built-in modules
-    const result = await makeHttpRequest(endpoint, body, authToken);
+    const result = await makeHttpRequest(endpoint, body, authToken, method);
     const statusCode = result.statusCode;
     const responseBody = result.response;
     
@@ -335,6 +335,7 @@ async function testEndpointValidation(endpoint, requestBody, authToken, progress
         fieldName, 
         body[fieldName], 
         authToken,
+        method,
         progressCallback
       );
       console.log(`\n✓ Completed testing field: ${fieldName} (${results.length} test cases)`);

@@ -41,7 +41,8 @@ h1 {
 }
 
 .input-group input,
-.input-group textarea {
+.input-group textarea,
+.input-group select {
   width: 100%;
   padding: 12px;
   border: 2px solid #000000;
@@ -51,6 +52,18 @@ h1 {
   background: #ffffff;
   color: #000000;
   transition: border-color 0.3s, background-color 0.3s;
+}
+
+.method-select {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
+  outline: none;
+  border-color: #000000;
 }
 
 .input-group input:focus,
